@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Muertes por Disparos Policiales en EE.UU. (2015-2019)</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>📊 Análisis de Muertes por Disparos</h2>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="menu-item active" data-tab="inicio">
+                    <span class="icon">🏠</span> <span>Inicio</span>
+                </li>
+                <li class="menu-item" data-tab="raza">
+                    <span class="icon">📊</span> <span>Casos por raza</span>
+                </li>
+                <li class="menu-item" data-tab="edades">
+                    <span class="icon">📈</span> <span>Distribución de edades</span>
+                </li>
+                <li class="menu-item" data-tab="correlacion">
+                    <span class="icon">🔗</span> <span>Correlación</span>
+                </li>
+                <li class="menu-item" data-tab="boxplot">
+                    <span class="icon">📦</span> <span>Edad por tipo de arma</span>
+                </li>
+                <li class="menu-item" data-tab="amenazas">
+                    <span class="icon">⚠️</span> <span>Amenazas</span>
+                </li>
+                <li class="menu-item" data-tab="huida">
+                    <span class="icon">🏃</span> <span>Casos según huida</span>
+                </li>
+                <li class="menu-item" data-tab="arma">
+                    <span class="icon">🔫</span> <span>Tipo de arma</span>
+                </li>
+                <li class="menu-item" data-tab="genero">
+                    <span class="icon">⚥</span> <span>Género</span>
+                </li>
+                <li class="menu-item" data-tab="conclusiones">
+                    <span class="icon">📄</span> <span>Conclusiones</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            <!-- INICIO -->
+            <div id="tab-inicio" class="tab-content active">
+                <div class="box">
+                    <h3>Introducción al Análisis</h3>
+                    <p>El presente análisis se basa en un dataset que recopila información sobre incidentes de muertes causadas por disparos de la policía en Estados Unidos. Este conjunto de datos, proporcionado por The Washington Post en colaboración con el FBI y los Centros para el Control y la Prevención de Enfermedades (CDC), documenta de manera sistemática los incidentes fatales que involucran a agentes policiales en el ejercicio de sus funciones.</p>
+                    <p>El dataset contiene un total de <span id="total-registros">5,416</span> registros y 14 variables, cubriendo el período 2015-2019. Entre las variables se incluyen:</p>
+                    <ul>
+                        <li>Características demográficas: edad, género, raza</li>
+                        <li>Geolocalización: ciudad y estado del incidente</li>
+                        <li>Contexto del incidente: nivel de amenaza percibida, tipo de arma involucrada</li>
+                        <li>Factores situacionales: presencia de signos de enfermedad mental, estado de huida</li>
+                        <li>Medidas de control: uso de cámaras corporales por parte de los agentes</li>
+                    </ul>
+                    <p>Este análisis exploratorio busca identificar patrones, tendencias y relaciones entre las variables para comprender mejor las dinámicas que rodean estos trágicos eventos.</p>
+                </div>
+
+                <div class="box">
+                    <h3>Vista previa del dataset</h3>
+                    <div id="tabla-preview"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <div class="box">
+                            <h3>Estadísticas descriptivas de edad</h3>
+                            <div id="tabla-info"></div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="box">
+                            <h3>Valores nulos por variable</h3>
+                            <div id="tabla-nulos"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="box">
+                    <h3>Hallazgos principales del análisis</h3>
+                    <h4>1. Disparidad racial en los incidentes</h4>
+                    <p>Se observa una sobrerrepresentación de ciertos grupos raciales, particularmente afroamericanos e hispanos, en relación con su proporción en la población general de EE.UU. Este patrón sugiere la existencia de desigualdades estructurales en la aplicación de la fuerza policial.</p>
+                    <h4>2. Concentración en adultos jóvenes</h4>
+                    <p>La mayoría de las víctimas se encuentran en el rango de 20 a 45 años, lo que coincide con la población más activa y visible en espacios públicos. Esto plantea preguntas sobre los patrones de interacción policial con diferentes grupos etarios.</p>
+                    <h4>3. Percepción de amenaza como factor clave</h4>
+                    <p>El 85% de los incidentes fueron clasificados como 'ataque', lo que indica que la percepción de amenaza inmediata es el principal justificante documentado para el uso de fuerza letal. Sin embargo, esto no necesariamente refleja una amenaza real objetiva.</p>
+                    <h4>4. Patrones de huida</h4>
+                    <p>La mayoría de las víctimas no intentaban huir en el momento del incidente, contradiciendo la narrativa común de que estos eventos ocurren durante persecuciones activas.</p>
+                    <h4>5. Salud mental como factor relevante pero no predominante</h4>
+                    <p>Un 25% de los casos presentaban signos de enfermedad mental, una proporción significativamente mayor que en la población general, sugiriendo una criminalización de condiciones de salud mental.</p>
+                    <h4>6. Estabilidad temporal del fenómeno</h4>
+                    <p>El número anual de incidentes se mantuvo notablemente estable entre 2015 y 2019 (entre 990-995 casos por año), indicando que no hubo mejoras sustanciales en las prácticas policiales durante este período.</p>
+                </div>
+            </div>
+
+            <!-- CASOS POR RAZA -->
+            <div id="tab-raza" class="tab-content">
+                <div class="box">
+                    <h3>Distribución de casos por grupo racial</h3>
+                    <div id="chart-raza" class="chart-container"></div>
+                    <div class="interpretacion">
+                        <h4>Interpretación</h4>
+                        <div id="interpretacion-raza"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DISTRIBUCIÓN DE EDADES -->
+            <div id="tab-edades" class="tab-content">
+                <div class="box">
+                    <h3>Perfil etario de las víctimas</h3>
+                    <div id="chart-edades" class="chart-container"></div>
+                    <div class="interpretacion">
+                        <h4>Interpretación</h4>
+                        <div id="interpretacion-edades"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MATRIZ DE CORRELACIÓN -->
+            <div id="tab-correlacion" class="tab-content">
+                <div class="box">
+                    <h3>Correlación entre variables numéricas</h3>
+                    <div id="chart-correlacion" class="chart-container" style="min-height: 550px;"></div>
+                    <div class="interpretacion">
+                        <h4>Interpretación</h4>
+                        <div id="interpretacion-correlacion"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOXPLOT EDAD SEGÚN TIPO DE ARMA -->
+            <div id="tab-boxplot" class="tab-content">
+                <div class="box">
+                    <h3>Edad según tipo de arma</h3>
+                    <div id="chart-boxplot" class="chart-container"></div>
+                    <div class="interpretacion">
+                        <h4>Interpretación</h4>
+                        <div id="interpretacion-boxplot"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AMENAZAS -->
+            <div id="tab-amenazas" class="tab-content">
+                <div class="box">
+                    <h3>Signos de enfermedad mental</h3>
+                    <div id="chart-amenazas" class="chart-container"></div>
+                    <div class="interpretacion">
+                        <h4>Interpretación</h4>
+                        <div id="interpretacion-amenazas"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CASOS SEGÚN HUIDA -->
+            <div id="tab-huida" class="tab-content">
+                <div class="box">
+                    <h3>Comportamiento de huida durante el incidente</h3>
+                    <div id="chart-huida" class="chart-container"></div>
+                    <div class="interpretacion">
+                        <h4>Interpretación</h4>
+                        <div id="interpretacion-huida"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TIPO DE ARMA -->
+            <div id="tab-arma" class="tab-content">
+                <div class="box">
+                    <h3>Proporción de tipo de arma</h3>
+                    <div id="chart-arma" class="chart-container"></div>
+                    <div class="interpretacion">
+                        <h4>Interpretación</h4>
+                        <div id="interpretacion-arma"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GÉNERO -->
+            <div id="tab-genero" class="tab-content">
+                <div class="box">
+                    <h3>Distribución de casos por género</h3>
+                    <div id="chart-genero" class="chart-container"></div>
+                    <div class="interpretacion">
+                        <h4>Interpretación</h4>
+                        <div id="interpretacion-genero"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONCLUSIONES COMPLETAS (IGUAL QUE EN R) -->
+            <div id="tab-conclusiones" class="tab-content">
+                <div class="box">
+                    <h3>Conclusiones y reflexiones finales</h3>
+                    <div class="interpretacion">
+                        <h4>Resumen ejecutivo del análisis</h4>
+                        <p>El análisis de incidentes fatales por disparos policiales en Estados Unidos evidencia la existencia de patrones consistentes asociados a factores raciales, demográficos, sociales, geográficos y operativos en la aplicación de la fuerza letal.</p>
+                        
+                        <h4>Hallazgos principales:</h4>
+                        <p><strong>1. Disparidad racial persistente:</strong> Aunque la población blanca presenta el mayor número absoluto de casos (2282 incidentes), al ajustar por distribución poblacional se evidencian disparidades significativas que afectan especialmente a la población afroamericana (1195 casos) y a la población hispana (839 casos), lo que sugiere posibles sesgos sistémicos en la interacción policial.</p>
+                        
+                        <p><strong>2. Estabilidad del fenómeno en el tiempo:</strong> Entre 2015 y 2019, el número de incidentes se mantiene estable, con valores cercanos a los 1000 casos anuales, sin reducciones significativas a pesar del aumento del debate público y algunas reformas implementadas, lo que sugiere una limitada efectividad de dichas intervenciones.</p>
+                        
+                        <p><strong>3. Concentración por edad:</strong> Los incidentes se concentran principalmente en adultos jóvenes y de mediana edad, especialmente entre los 20 y 49 años, lo que indica una mayor exposición de este grupo a situaciones de interacción con autoridades.</p>
+                        
+                        <p><strong>4. Salud mental como factor asociado:</strong> Se observan diferencias en la clasificación de incidentes cuando existen signos de enfermedad mental, evidenciando ambigüedad en la evaluación de estos casos y posibles dificultades en la determinación del nivel de amenaza en tiempo real.</p>
+                        
+                        <p><strong>5. Contexto del incidente:</strong> En el 63,9% de los casos la víctima no se encontraba huyendo, lo que contradice la percepción de que la mayoría de estos eventos ocurre durante persecuciones.</p>
+                        
+                        <p><strong>6. Tipo de arma:</strong> El 67.5% de las víctimas portaba un arma de fuego, mientras que aproximadamente uno de cada ocho casos involucraba a personas desarmadas o con armas de juguete, lo que cuestiona la valoración de la amenaza en dichas situaciones.</p>
+                        
+                        <p><strong>7. Disparidad de género marcada:</strong> Los hombres representan aproximadamente el 95,5% de las víctimas, lo que evidencia una brecha significativa frente a las mujeres y sugiere la influencia de factores estructurales y conductuales.</p>
+                        
+                        <p><strong>8. Concentración geográfica desigual:</strong> Se observa una alta concentración de casos en estados como California, Texas y Florida, mientras que al ajustar por población las tasas más elevadas se presentan en Oklahoma, Arizona y Luisiana, reflejando diferencias regionales en políticas y contexto social.</p>
+                        
+                        <p><strong>9. Problemas de transparencia:</strong> Solo el 28% de los incidentes contaban con registro de cámara corporal, limitando la rendición de cuentas.</p>
+                        
+                        <h4>Implicaciones para políticas públicas:</h4>
+                        <p>Estos resultados evidencian la necesidad de fortalecer las estrategias de prevención y control en el uso de la fuerza policial, incluyendo la mejora en los procesos de evaluación de riesgo, la capacitación en el manejo de crisis relacionadas con salud mental, y la revisión de los protocolos de intervención en escenarios de no huida.</p>
+                        
+                        <p>Asimismo, se requiere avanzar en la reducción de disparidades raciales y de género mediante políticas más equitativas, junto con una mayor estandarización de procedimientos entre estados para evitar diferencias estructurales en la aplicación de la fuerza.</p>
+                        
+                        <h4>Conclusión general:</h4>
+                        <p>En conjunto, los resultados muestran que los incidentes fatales por intervención policial no son eventos aislados, sino que responden a patrones estructurales complejos relacionados con factores raciales, sociales, demográficos y geográficos, lo que exige análisis continuo y reformas orientadas a la reducción de estas desigualdades.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tooltip" class="tooltip"></div>
+    <script src="js/main.js"></script>
+</body>
+</html>
