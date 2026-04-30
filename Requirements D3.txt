@@ -1,0 +1,86 @@
+================================================================================
+                    REQUERIMIENTOS PARA D3.JS APP (JavaScript)
+================================================================================
+
+ARCHIVO: requirements.txt
+
+================================================================================
+
+# ============================================
+# D3.JS APP - REQUERIMIENTOS
+# ============================================
+
+# La aplicación D3.js es frontend puro, no requiere instalación de paquetes
+# Solo necesita un navegador web y un servidor HTTP local (opcional)
+
+# DEPENDENCIA ÚNICA:
+# D3.js v7 - https://d3js.org/
+
+# CDN para cargar en index.html:
+# <script src="https://d3js.org/d3.v7.min.js"></script>
+
+# ============================================
+# HERRAMIENTAS DE DESARROLLO LOCAL (OPCIONALES)
+# ============================================
+
+# Live Server (extensión de VS Code)
+# http-server (Node.js)
+# Python http.server
+
+# Instalar http-server globalmente:
+# npm install -g http-server
+
+# Ejecutar servidor local:
+# http-server -p 8080
+
+# O con Python:
+# python -m http.server 8000
+
+================================================================================
+ARCHIVO: package.json (opcional - para desarrollo local con Node.js)
+================================================================================
+
+{
+  "name": "d3app",
+  "version": "1.0.0",
+  "description": "Análisis de muertes por disparos policiales con D3.js",
+  "main": "index.html",
+  "scripts": {
+    "start": "http-server -p 8080",
+    "dev": "live-server --port=5500"
+  },
+  "keywords": [
+    "d3js",
+    "data-visualization",
+    "police-shootings",
+    "dataviz"
+  ],
+  "author": "Harvey Lozada",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2"
+  }
+}
+
+
+
+================================================================================
+                                  ARCHIVOS COMPARTIDOS
+================================================================================
+
+ARCHIVO: .gitignore
+
+================================================================================
+
+# ============================================
+# .GITIGNORE PARA PROYECTOS  
+# ============================================
+
+
+# D3.js / Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+.DS_Store
+*.log
